@@ -255,6 +255,9 @@ module.exports = function(
     );
   }
   console.log();
+  console.log(chalk.cyan('All done'));
+  console.log();
+
   console.log('Happy hacking!');
 };
 
