@@ -181,14 +181,40 @@ module.exports = function(
     fs.unlinkSync(templateDependenciesPath);
   }
 
+  // install custom additional packages
+  let custom_args = ['install'];
+  const custom_packages = [
+    'redux',
+    'redux-create-reducer',
+    'redux-form',
+    'redux-thunk',
+    'reactstrap',
+    'bootstrap',
+    'react-redux',
+    'react-router-dom',
+  ];
+
+  custom_args = custom_args.concat(custom_packages);
+
+  console.log(chalk.cyan('Installing additional packages'));
+  const installing = spawn.sync(command, custom_args, { stdio: 'inherit' });
+
+  if (installing.status !== 0) {
+    console.log(
+      chalk.red('Installing failed, please install the packages manually')
+    );
+  } else {
+    console.log(chalk.cyan('Installed successfully'));
+  }
+
   // Install react and react-dom for backward compatibility with old CRA cli
   // which doesn't install react and react-dom along with react-scripts
   // or template is presetend (via --internal-testing-template)
   if (!isReactInstalled(appPackage) || template) {
     console.log(`Installing react and react-dom using ${command}...`);
-    console.log();
 
     const proc = spawn.sync(command, args, { stdio: 'inherit' });
+    console.log(args);
     if (proc.status !== 0) {
       console.error(`\`${command} ${args.join(' ')}\` failed`);
       return;
